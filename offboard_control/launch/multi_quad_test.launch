@@ -1,0 +1,16 @@
+<launch>
+
+<node pkg="offboard_control" name="Quad1_offboard_pvacontrol" type="pva_control_offboard_multi_uav1.py" output="screen" >
+</node>
+
+<node pkg="offboard_control" name="Quad2_offboard_pvacontrol" type="pva_control_offboard_multi_uav2.py" output="screen" >
+</node>
+
+<node pkg="offboard_control" name="Quad3_offboard_pvacontrol" type="pva_control_offboard_multi_uav3.py" output="screen" >
+</node>
+
+<node pkg="offboard_control" name="Quad4_offboard_pvacontrol" type="pva_control_offboard_multi_uav4.py" output="screen" >
+</node>
+
+
+</launch>
