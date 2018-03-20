@@ -47,7 +47,7 @@ if __name__ == "__main__":
 
     # Set time stuff
     time_full_traj = 200 #seconds
-    freq = 200
+    freq = 10
     wait_rate = rospy.Rate(freq)
 
     # For loop that sets the trajectory that is sent out to gazebo
@@ -56,6 +56,7 @@ if __name__ == "__main__":
     z_traj = [current_pos.z]
 
     for s in traj:
+    # for s in traj[:10]:
         temp = Point(s[0] , s[1] , 2)
         x_traj.append(temp.x)
         y_traj.append(temp.y)
