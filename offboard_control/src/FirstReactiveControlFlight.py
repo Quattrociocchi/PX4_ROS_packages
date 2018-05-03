@@ -49,27 +49,30 @@ def parseJson(filename):
     file.close()
     variables = dict()
     for var in data['variables']:
-            v = var.split('@')[0]
-            if v not in variables.keys():
-                for var2ind in range(data['variables'].index(var),len(data['variables'])):
-                    var2 = data['variables'][var2ind]
-                    if v != var2.split('@')[0]:
-                        variables[v] = [data['variables'].index(var), data['variables'].index(var2)]
-                        break
-                    if data['variables'].index(var2) == len(data['variables'])-1:
-                        variables[v] = [data['variables'].index(var), data['variables'].index(var2)]
+        if '@' in var:
+            v = var[0:var.index('@')]
+            Flag = True
+        else:
+            v = copy.deepcopy(var)
+            Flag = False
+        if v not in variables.keys():
+            if Flag:
+                variables[v] = [data['variables'].index(var), max(loc for loc, val in enumerate(data['variables']) if val[0:val.index('@')] == v)+1]
+            else:
+                variables[v] = [data['variables'].index(var), data['variables'].index(var)+1]
 
     for s in data['nodes'].keys():
-        automaton[int(s)] = dict.fromkeys(['State','Successors'])
+        automaton[int(s)] = dict.fromkeys(['State','Successors','Predecessors'])
         automaton[int(s)]['State'] = dict()
         automaton[int(s)]['Successors'] = []
+        automaton[int(s)]['Predecessors'] = []
         for v in variables.keys():
-            if variables[v][0] == variables[v][1]:
-                bin  = [data['nodes'][s]['state'][variables[v][0]]]
-            else:
-                bin = data['nodes'][s]['state'][variables[v][0]:variables[v][1]]
+            bin = data['nodes'][s]['state'][variables[v][0]:variables[v][1]]
             automaton[int(s)]['State'][v] = int(''.join(str(e) for e in bin)[::-1], 2)
             automaton[int(s)]['Successors'] = data['nodes'][s]['trans']
+    for s in data['nodes'].keys():
+        for t in automaton[int(s)]['Successors']:
+            automaton[t]['Predecessors'].append(int(s))
     return automaton
 
 
@@ -94,10 +97,12 @@ def computeAutomatonState(automaton,currstate,state):
 if __name__ == "__main__":
 
     # Get the automaton from the json file
-    filename = '/home/jaq394l/catkin_ws/src/PX4_ROS_packages/offboard_control/src/5x5.json'
-    A = parseJson(filename)
-    # writeJson('5x5.json','firstOutput')
-
+    directory = '/home/jaq394l/catkin_ws/src/PX4_ROS_packages/offboard_control/src'
+    jsonInputFile = directory + '/finepartoutput_10x15'
+    readableOutputFile = directory + '/secondOutput'
+    A = parseJson(jsonInputFile)
+    # writeJson(jsonInputFile,readableOutputFile)
+    # sys.exit()
     ##############################
 
     # Initialize node.
@@ -121,13 +126,13 @@ if __name__ == "__main__":
     # Set time parameters
     time_traj = 3   # Seconds
     # freq = 1/(1.5*time_traj)
-    freq = 20
+    freq = 40
     wait_rate = rospy.Rate(freq)
 
     ##############################
 
     # Set a trajectory (list of states converted to (xyz)) for the target to fly. Must fly to adjacent boxes on the grid
-    traj1_states = [5, 10, 15, 20, 21, 22]   # Choice made by us
+    traj1_states = [5, 10, 15, 20, 21, 22, 21, 20, 15]   # Choice made by us
     ncols = 5   # Determined by grid size
     traj1 = []
     traj2 = []  # Use later
@@ -198,11 +203,6 @@ if __name__ == "__main__":
 
 
 
-
-
     # Land the vehicle
     start_landing(quad_name= quad_ros_namespace1)
     start_landing(quad_name= quad_ros_namespace2)
-
-    
-
