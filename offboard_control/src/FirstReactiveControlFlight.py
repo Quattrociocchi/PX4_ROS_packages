@@ -132,7 +132,7 @@ if __name__ == "__main__":
     ##############################
 
     # Set a trajectory (list of states converted to (xyz)) for the target to fly. Must fly to adjacent boxes on the grid
-    traj1_states = [5, 10, 15, 20, 21, 22, 21, 20, 15]   # Choice made by us
+    traj1_states = [5, 10, 15, 20, 21, 22, 23, 22, 21]   # Choice made by us
     ncols = 5   # Determined by grid size
     traj1 = []
     traj2 = []  # Use later
@@ -178,6 +178,7 @@ if __name__ == "__main__":
             if A[k]['State']['st'] == st:
                 ns = k
                 break
+        counter = counter + 1 # Dont forget the counter.........
 
         # Create a point out of the selected next action (point the agent should move to)
         p2 = A[ns]['State']['s']
@@ -187,7 +188,8 @@ if __name__ == "__main__":
         y_traj_2.append(temp_2.y)
         z_traj_2.append(temp_2.z)
 
-
+        # print(p2)
+        # variable = raw_input('input anything to move on: ')
 
         # Make the trajectory list for target(1) and agent (2)
         pva_list_1 = generate_traj_3d(x=y_traj_1[-2:] , y=x_traj_1[-2:] , z=z_traj_1[-2:] , traj_time=[0,time_traj] , corr=None , freq = freq)
@@ -199,7 +201,7 @@ if __name__ == "__main__":
             wait_rate.sleep()
         for j in range(len(pva_list_2.pva)):
             send_pva_pub_2.publish(pva_list_2.pva[i])
-            wait_rate.sleep()
+            # wait_rate.sleep()
 
 
 
