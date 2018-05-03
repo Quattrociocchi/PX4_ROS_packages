@@ -56,8 +56,8 @@ if __name__ == "__main__":
 
     #### TIME SET
     # Set time stuff
-    time_full_traj = 200 #seconds
-    freq = 20
+    time_full_traj = 100 #seconds
+    freq = 1
     wait_rate = rospy.Rate(freq)
 
 
