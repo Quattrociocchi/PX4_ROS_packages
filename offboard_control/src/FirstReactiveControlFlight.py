@@ -42,6 +42,39 @@ def writeJson(infile,outfile,dict=None):
     f.close()
 
 
+# def parseJson(filename):
+#     automaton = dict()
+#     file = open(filename)
+#     data = json.load(file)
+#     file.close()
+#     variables = dict()
+#     for var in data['variables']:
+#         if '@' in var:
+#             v = var[0:var.index('@')]
+#             Flag = True
+#         else:
+#             v = copy.deepcopy(var)
+#             Flag = False
+#         if v not in variables.keys():
+#             if Flag:
+#                 variables[v] = [data['variables'].index(var), max(loc for loc, val in enumerate(data['variables']) if val[0:val.index('@')] == v)+1]
+#             else:
+#                 variables[v] = [data['variables'].index(var), data['variables'].index(var)+1]
+
+#     for s in data['nodes'].keys():
+#         automaton[int(s)] = dict.fromkeys(['State','Successors','Predecessors'])
+#         automaton[int(s)]['State'] = dict()
+#         automaton[int(s)]['Successors'] = []
+#         automaton[int(s)]['Predecessors'] = []
+#         for v in variables.keys():
+#             bin = data['nodes'][s]['state'][variables[v][0]:variables[v][1]]
+#             automaton[int(s)]['State'][v] = int(''.join(str(e) for e in bin)[::-1], 2)
+#             automaton[int(s)]['Successors'] = data['nodes'][s]['trans']
+#     for s in data['nodes'].keys():
+#         for t in automaton[int(s)]['Successors']:
+#             automaton[t]['Predecessors'].append(int(s))
+#     return automaton
+
 def parseJson(filename):
     automaton = dict()
     file = open(filename)
@@ -49,31 +82,29 @@ def parseJson(filename):
     file.close()
     variables = dict()
     for var in data['variables']:
-        if '@' in var:
-            v = var[0:var.index('@')]
-            Flag = True
-        else:
-            v = copy.deepcopy(var)
-            Flag = False
-        if v not in variables.keys():
-            if Flag:
-                variables[v] = [data['variables'].index(var), max(loc for loc, val in enumerate(data['variables']) if val[0:val.index('@')] == v)+1]
-            else:
-                variables[v] = [data['variables'].index(var), data['variables'].index(var)+1]
+            v = var.split('@')[0]
+            if v not in variables.keys():
+                for var2ind in range(data['variables'].index(var),len(data['variables'])):
+                    var2 = data['variables'][var2ind]
+                    if v != var2.split('@')[0]:
+                        variables[v] = [data['variables'].index(var), data['variables'].index(var2)]
+                        break
+                    if data['variables'].index(var2) == len(data['variables'])-1:
+                        variables[v] = [data['variables'].index(var), data['variables'].index(var2)]
 
     for s in data['nodes'].keys():
-        automaton[int(s)] = dict.fromkeys(['State','Successors','Predecessors'])
+        automaton[int(s)] = dict.fromkeys(['State','Successors'])
         automaton[int(s)]['State'] = dict()
         automaton[int(s)]['Successors'] = []
-        automaton[int(s)]['Predecessors'] = []
         for v in variables.keys():
-            bin = data['nodes'][s]['state'][variables[v][0]:variables[v][1]]
+            if variables[v][0] == variables[v][1]:
+                bin  = [data['nodes'][s]['state'][variables[v][0]]]
+            else:
+                bin = data['nodes'][s]['state'][variables[v][0]:variables[v][1]]
             automaton[int(s)]['State'][v] = int(''.join(str(e) for e in bin)[::-1], 2)
             automaton[int(s)]['Successors'] = data['nodes'][s]['trans']
-    for s in data['nodes'].keys():
-        for t in automaton[int(s)]['Successors']:
-            automaton[t]['Predecessors'].append(int(s))
     return automaton
+
 
 
 def computeAutomatonState(automaton,currstate,state):
@@ -98,9 +129,15 @@ if __name__ == "__main__":
 
     # Get the automaton from the json file
     directory = '/home/jaq394l/catkin_ws/src/PX4_ROS_packages/offboard_control/src'
-    jsonInputFile = directory + '/finepartoutput_10x15'
-    readableOutputFile = directory + '/secondOutput'
+
+    # jsonInputFile = directory + '/finepartoutput_10x15'
+    # readableOutputFile = directory + '/secondOutput'
+
+    jsonInputFile = directory + '/example2.json'
+    readableOutputFile = directory + '/sheildFirstOutput'
+
     A = parseJson(jsonInputFile)
+
     # writeJson(jsonInputFile,readableOutputFile)
     # sys.exit()
     ##############################
@@ -194,6 +231,8 @@ if __name__ == "__main__":
         # Make the trajectory list for target(1) and agent (2)
         pva_list_1 = generate_traj_3d(x=y_traj_1[-2:] , y=x_traj_1[-2:] , z=z_traj_1[-2:] , traj_time=[0,time_traj] , corr=None , freq = freq)
         pva_list_2 = generate_traj_3d(x=y_traj_2[-2:] , y=x_traj_2[-2:] , z=z_traj_2[-2:] , traj_time=[0,time_traj] , corr=None , freq = freq)
+
+        # print(pva_list_1)
 
         # Send the generated traj to the vehicles one at a time
         for i in range(len(pva_list_1.pva)):
