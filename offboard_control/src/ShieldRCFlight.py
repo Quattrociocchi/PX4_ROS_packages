@@ -17,13 +17,13 @@ import simplejson as json
 #     global current_position
 #     current_position = msg.pose.pose.position
 
-def card2coordAction(card,action):
+def card2coordAction(card):
     if card == 0:
         action = 0
     elif card == 1:
-        action = -1
-    elif card == 2:
         action = 1
+    elif card == 2:
+        action = -1
     elif card == 3:
         action = -1
     elif card == 4:
@@ -36,8 +36,8 @@ def card2coordAction(card,action):
 def state2coord(ncols,state):
     # Assumes that the first state is 0
     coords = [0, 0, 0]
-    coords[0] = state % ncols
-    coords[1] = state / ncols
+    coords[0] = state / ncols
+    coords[1] = state % ncols
     coords[2] = 2  # Specific to the current problem. Change as needed
     return coords   # List of integers
 
@@ -139,17 +139,18 @@ if __name__ == "__main__":
     ##############################
 
     # Set time parameters
-    time_traj = 3   # Seconds
-    freq = 40
+    time_traj = 1.25   # Seconds
+    freq = 10
     wait_rate = rospy.Rate(freq)
 
     ##############################
 
     # Set the direction that the quad will try to fly
-    uLoc1_traj = [1, 1, 1, 1]   # North-South
-    uLoc0_traj = [4, 4, 4, 4]   # East-West
+    uLoc1_traj = [0, 0, 1, 1, 1, 1, 2, 2, 1, 2, 2, 2, 0, 1]   # North-South
+    uLoc0_traj = [0, 0, 4, 4, 4, 3, 4, 4, 3, 3, 3, 3, 3, 3]   # East-West
     ncols = 5   # Determined by grid size
-    # Defien traj's for later
+
+    # Define traj's for later
     traj_s1 = []
     traj_s0 = []
 
@@ -157,7 +158,7 @@ if __name__ == "__main__":
 
     # Set offsets and initial positions (local frame)
     xOffset_s1 = 2
-    yOffset_s1 = 4
+    yOffset_s1 = 0
     xOffset_s0 = 0
     yOffset_s0 = 2
 
@@ -175,6 +176,7 @@ if __name__ == "__main__":
     ##############################
 
     ns = 0 # Value of the next state
+    counter = 0
     for uLoc1, uLoc0 in zip(uLoc1_traj,uLoc0_traj):
 
         # Check to see if the quads will violate the safety specification
@@ -184,54 +186,37 @@ if __name__ == "__main__":
                 break
 
         # These are cardinal directions
-        uShield1 = A[ns]['ushield1']
-        uShield0 = A[ns]['ushield0']
+        uShield1 = A[ns]['State']['ushield1'] # Movements North or South (y)
+        uShield0 = A[ns]['State']['ushield0'] # Movements East or West (x)
 
-        # 
+        # Convert from direction to dx or dy
+        action1 = card2coordAction(uShield1)
+        action0 = card2coordAction(uShield0)
 
-
-        traj_s1.append(state2coord(ncols,p))
-        traj_s0.append(state2coord(ncols,p))
-
-        # ######## This will probably be done afer checking the allowable states.....
-        temp_s1 = Point(s1[0] - xOffset_s1 , s1[1] - yOffset_s1 , 2)
+        # Update traj
+        temp_s1 = Point(x_traj_s1[counter] , y_traj_s1[counter] + action1, 2)
         x_traj_s1.append(temp_s1.x)
         y_traj_s1.append(temp_s1.y)
         z_traj_s1.append(temp_s1.z)
 
-        temp_s0 = Point(s0[0] - xOffset_s0 , s0[1] - yOffset_s0 , 2)
+        temp_s0 = Point(x_traj_s0[counter] + action0, y_traj_s0[counter], 2)
         x_traj_s0.append(temp_s0.x)
         y_traj_s0.append(temp_s0.y)
         z_traj_s0.append(temp_s0.z)
 
+        counter = counter + 1
 
-
-
-
-        # Create a point out of the selected next action (point the agent should move to)
-        p2 = A[ns]['State']['s']
-        traj2.append(state2coord(ncols,p2))
-        temp_2 = Point(traj2[-1][0] - xOffset_2 , traj2[-1][1] - yOffset_2 , 2)
-        x_traj_2.append(temp_2.x)
-        y_traj_2.append(temp_2.y)
-        z_traj_2.append(temp_2.z)
-
-        # print(p2)
-        # variable = raw_input('input anything to move on: ')
-
-        # Make the trajectory list for target(1) and agent (2)
-        pva_list_1 = generate_traj_3d(x=y_traj_1[-2:] , y=x_traj_1[-2:] , z=z_traj_1[-2:] , traj_time=[0,time_traj] , corr=None , freq = freq)
-        pva_list_2 = generate_traj_3d(x=y_traj_2[-2:] , y=x_traj_2[-2:] , z=z_traj_2[-2:] , traj_time=[0,time_traj] , corr=None , freq = freq)
-
-        # print(pva_list_1)
+        # Make the trajectory list for s1(uav1) and s0(uav2)
+        pva_list_1 = generate_traj_3d(x=x_traj_s1[-2:] , y=y_traj_s1[-2:] , z=z_traj_s1[-2:] , traj_time=[0,time_traj] , corr=None , freq = freq)
+        pva_list_2 = generate_traj_3d(x=x_traj_s0[-2:] , y=y_traj_s0[-2:] , z=z_traj_s0[-2:] , traj_time=[0,time_traj] , corr=None , freq = freq)
 
         # Send the generated traj to the vehicles one at a time
         for i in range(len(pva_list_1.pva)):
             send_pva_pub_1.publish(pva_list_1.pva[i])
-            wait_rate.sleep()
+            # wait_rate.sleep()
         for j in range(len(pva_list_2.pva)):
             send_pva_pub_2.publish(pva_list_2.pva[i])
-            # wait_rate.sleep()
+            wait_rate.sleep()
 
 
 
