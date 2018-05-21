@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 import sys
-sys.path.insert( 0 , '~/catkin_ws/src/offboard_control/src')
+# sys.path.insert( 0 , '~/catkin_ws/src/offboard_control/src')
+sys.path.insert( 0 , '/home/jaq394l/catkin_ws/src/PX4_ROS_packages/offboard_control/src/OriginalFiles')
 
 import rospy
 from qcontrol_defs.msg import *
@@ -57,7 +58,7 @@ if __name__ == "__main__":
     #### TIME SET
     # Set time stuff
     time_full_traj = 100 #seconds
-    freq = 1
+    freq = 20
     wait_rate = rospy.Rate(freq)
 
 
