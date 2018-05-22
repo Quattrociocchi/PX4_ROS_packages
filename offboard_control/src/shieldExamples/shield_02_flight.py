@@ -17,35 +17,46 @@ def shield_orders_callback(msg):
     global position_change
     position_change = msg.posChange
 
-def card2boolList(card):
-	shield_boolean_list = [False] * 6
+def card2shield_input_msg(card):
+	shield_input_msg = ShieldInput()
+	shield_input_msg.positiveX = False
+	shield_input_msg.negativeX = False
+	shield_input_msg.positiveY = False
+	shield_input_msg.negativeY = False
+	shield_input_msg.positiveZ = False
+	shield_input_msg.negativeZ = False
+
 	if card == 0:
 		pass
 	elif card == 1:
-		shield_boolean_list[0] = True # North +x
+		shield_input_msg.positiveX = True # North +x
 	elif card == 2:
-		shield_boolean_list[1] = True # South -x
+		shield_input_msg.negativeX = True # South -x
 	elif card == 3:
-		shield_boolean_list[3] = True # West -y
+		shield_input_msg.negativeY = True # West -y
 	elif card == 4:
-		shield_boolean_list[2] = True # East +y
+		shield_input_msg.positiveY = True # East +y
 	else:
-		print('Error. The variable card must be an integer from the set {0,1,2,3,4} = {R,N,S,W,E}.')
-# --------------------------- Just here for reference ------------------------ #
-    # if card == 0:
-    #     action = 0
-    # elif card == 1:
-    #     action = 1
-    # elif card == 2:
-    #     action = -1
-    # elif card == 3:
-    #     action = -1
-    # elif card == 4:
-    #     action = 1
-    # else:
-    #     print('Error. The variable card must be an integer from the set {0,1,2,3,4} = {R,N,S,W,E}.')
+		print('Error. The variable "card" must be an integer from the set {0,1,2,3,4} = {R,N,S,W,E}.')
 
-    return shield_boolean_list
+    return shield_input_msg
+
+# def card2boolList(card):
+# 	shield_bool_list = [False] * 6
+# 	if card == 0:
+# 		pass
+# 	elif card == 1:
+# 		shield_bool_list[0] = True # North +x
+# 	elif card == 2:
+# 		shield_bool_list[1] = True # South -x
+# 	elif card == 3:
+# 		shield_bool_list[3] = True # West -y
+# 	elif card == 4:
+# 		shield_bool_list[2] = True # East +y
+# 	else:
+# 		print('Error. The variable card must be an integer from the set {0,1,2,3,4} = {R,N,S,W,E}.')
+
+#     return shield_bool_list
 
 
 def state2coord(ncols,state):
@@ -146,9 +157,9 @@ if __name__ == "__main__":
     send_pva_pub_1 = rospy.Publisher(quad_ros_namespace1 + '/qcontrol/pva_control', PVA , queue_size=10)
     send_pva_pub_2 = rospy.Publisher(quad_ros_namespace2 + '/qcontrol/pva_control', PVA , queue_size=10)
 
-    # Create a publisher to send shield boolean list
-    send_shield_pub_1 = rospy.Publisher(quad_ros_namespace1 + '',Shield, queue_size=10)
-    send_shield_pub_2 = rospy.Publisher(quad_ros_namespace2 + '',Shield, queue_size=10)
+    # Create a publisher to send shield boolean message
+    send_shield_pub_1 = rospy.Publisher(quad_ros_namespace1 + '/shield_bool_list',Shield, queue_size=10)
+    send_shield_pub_2 = rospy.Publisher(quad_ros_namespace2 + '/shield_bool_list',Shield, queue_size=10)
 
     # Start position control with taking off at the beginning
     start_pva_control(quad_name= quad_ros_namespace1 , takeoff_before= True)
@@ -207,33 +218,26 @@ if __name__ == "__main__":
         uShield1 = A[ns]['State']['ushield1'] # Movements North or South (y)
         uShield0 = A[ns]['State']['ushield0'] # Movements East or West (x)
 
-
-
-
-
 # ---------------------------------- Start new code for implementing the position change with seperate node ----------------------------------- #
 	# Has the order {+x, -x, +y, -y, +z, -z}
-	bool_list_1 = card2boolList(uShield1)
-	bool_list_2 = card2boolList(uShield0)
+	bool_list_1 = card2shield_input_msg(uShield1)
+	bool_list_2 = card2shield_input_msg(uShield0)
 
 	############### Code for figuring out the dx and dy ####################
 
+	print('Sleeping for 0.5 seconds')
 	rospy.sleep(0.5)
 	send_shield_pub_1.publish(bool_list_1)
 	send_shield_pub_2.publish(bool_list_2)
 
     # Create the subscriber to receive dx adn dy
-    rospy.Subscriber('', ShieldOutput, shield_orders_callback)
-
+    rospy.Subscriber(quad_ros_namespace1 + '/shield_orders_pos', ShieldOutput, shield_orders_callback)
+    rospy.Subscriber(quad_ros_namespace2 + '/shield_orders_pos', ShieldOutput, shield_orders_callback)
 
 	action1 = position_change[1]
-	action2 = position_change[0]
+	action0 = position_change[0]
 
-# ---------------------------------- Start new code for implementing the position change with seperate node ----------------------------------- #
-
-
-
-
+# ---------------------------------- End new code for implementing the position change with seperate node ----------------------------------- #
 
         # Update traj
         temp_s1 = Point(x_traj_s1[counter] , y_traj_s1[counter] + action1, 2)
