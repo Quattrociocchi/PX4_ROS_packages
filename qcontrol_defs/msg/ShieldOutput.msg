@@ -1,2 +1,2 @@
 Header header
-int[] posChange
+int32[] posChange

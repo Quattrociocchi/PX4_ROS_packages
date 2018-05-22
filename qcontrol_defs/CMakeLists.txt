@@ -16,6 +16,8 @@ add_message_files(
    ConstraintAxis.msg
    Trajectory.msg
    WayPoints.msg
+   ShieldInput.msg
+   ShieldOutput.msg
  )
 
  add_service_files(

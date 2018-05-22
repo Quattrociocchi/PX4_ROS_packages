@@ -1,9 +1,9 @@
 <launch>
-	<node pkg="offboard_control" name="Quad1_shield" type="ShieldOrders" output="screen">
+	<node pkg="offboard_control" name="Quad1_shield" type="ShieldOrders.py" output="screen">
 		<param name="quad_ros_namespace" value="/uav1" />
 	</node>
 
-	<node pkg="offboard_control" name="Quad2_shield" type="ShieldOrders" output="screen">
+	<node pkg="offboard_control" name="Quad2_shield" type="ShieldOrders.py" output="screen">
 		<param name="quad_ros_namespace" value="/uav2" />
 	</node>
 </launch>

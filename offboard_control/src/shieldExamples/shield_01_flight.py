@@ -10,8 +10,6 @@ import csv
 import rospy
 from qcontrol_defs.msg import *
 from utils_functions import *
-# from mavros_msgs.msg import HomePosition
-# from geometry_msgs.msg import PoseStamped
 import simplejson as json
 
 ##############################
