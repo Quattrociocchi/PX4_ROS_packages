@@ -4,7 +4,7 @@
 
 import sys
 # for some reason ~/ does not work.
-sys.path.insert( 0 , '/home/jaq394l/catkin_ws/src/PX4_ROS_packages/offboard_control/src/OriginalFiles')
+sys.path.insert( 0 , '/home/jaq394l/catkin_ws/src/PX4_ROS_packages/offboard_control/src')
 
 import csv
 import rospy

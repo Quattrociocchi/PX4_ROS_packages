@@ -2,26 +2,10 @@
 
 import rospy
 from qcontrol_defs.msg import *
-# import ShieldInput.msg
-
-
-
-
-# Header header
-# bool positiveX
-# bool negativeX
-# bool positiveY
-# bool negativeY
-# bool positiveZ
-# bool negativeZ
-
-
-
 
 # ------------------------------------------------------------------ #
 
 def shield_bool_callback(msg):
-    global shield_orders
     shield_bool = msg
 
     # Check for contradictions in the message received
@@ -57,6 +41,7 @@ def shield_bool_callback(msg):
     shield_orders_temp.posChange.append(y)
     shield_orders_temp.posChange.append(z)
 
+    global shield_orders
     shield_orders = shield_orders_temp
 
 # ------------------------------------------------------------------ #
@@ -71,20 +56,14 @@ if __name__ == "__main__":
     # Create a publisher to send target positions
     send_shield_pub = rospy.Publisher(quad_ros_namespace + '/shield_orders_pos', ShieldOutput , queue_size=10)
 
-    # # Define the shield bool 
-    # shield_bool = ShieldInput()
-
     while not rospy.is_shutdown():
 
         rospy.Subscriber(quad_ros_namespace + '/shield_bool_list',ShieldInput , shield_bool_callback)
-        # shield_bool = shield_bool_orders
 
         # print('Listening for ShieldInput')
 
         if 'shield_orders' in globals():
             # Publish the resulting change in position
-            print('Sleeping for 0.5 seconds')
-            rospy.sleep(0.5)
             send_shield_pub.publish(shield_orders)
         else:
             pass

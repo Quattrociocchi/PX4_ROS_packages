@@ -45,23 +45,6 @@ def card2shield_input_msg(card):
 
     return shield_input_msg
 
-# def card2boolList(card):
-#   shield_bool_list = [False] * 6
-#   if card == 0:
-#       pass
-#   elif card == 1:
-#       shield_bool_list[0] = True # North +x
-#   elif card == 2:
-#       shield_bool_list[1] = True # South -x
-#   elif card == 3:
-#       shield_bool_list[3] = True # West -y
-#   elif card == 4:
-#       shield_bool_list[2] = True # East +y
-#   else:
-#       print('Error. The variable card must be an integer from the set {0,1,2,3,4} = {R,N,S,W,E}.')
-
-#     return shield_bool_list
-
 
 def state2coord(ncols,state):
     # Assumes that the first state is 0
@@ -165,7 +148,7 @@ if __name__ == "__main__":
     send_shield_pub_1 = rospy.Publisher(quad_ros_namespace1 + '/shield_bool_list',ShieldInput, queue_size=10)
     send_shield_pub_2 = rospy.Publisher(quad_ros_namespace2 + '/shield_bool_list',ShieldInput, queue_size=10)
 
-    # Start position control with taking off at the beginning
+    # # Start position control with taking off at the beginning
     start_pva_control(quad_name= quad_ros_namespace1 , takeoff_before= True)
     start_pva_control(quad_name= quad_ros_namespace2 , takeoff_before= True)
 
@@ -179,8 +162,8 @@ if __name__ == "__main__":
     ##############################
 
     # Set the direction that the quad will try to fly
-    uLoc1_traj = [0, 0, 1, 1, 1, 1, 2, 2, 1, 2, 2, 2, 0, 1]   # North-South
-    uLoc0_traj = [0, 0, 4, 4, 4, 3, 4, 4, 3, 3, 3, 3, 3, 3]   # East-West
+    uLoc1_traj = [0, 0, 1, 1, 1, 1, 2, 2, 1, 2, 2, 2, 0, 1, 0]   # North-South
+    uLoc0_traj = [0, 0, 4, 4, 4, 3, 4, 4, 3, 3, 3, 3, 3, 3, 0]   # East-West
     ncols = 5   # Determined by grid size
 
     # Define traj's for later
@@ -208,8 +191,6 @@ if __name__ == "__main__":
 
     ##############################
 
-
-
     ns = 0 # Value of the next state
     counter = 0
     for uLoc1, uLoc0 in zip(uLoc1_traj,uLoc0_traj):
@@ -225,57 +206,54 @@ if __name__ == "__main__":
         uShield0 = A[ns]['State']['ushield0'] # Movements East or West (x)
 
 # ---------------------------------- Start new code for implementing the position change with seperate node ----------------------------------- #
-    # Has the order {+x, -x, +y, -y, +z, -z}
-    bool_list_1 = card2shield_input_msg(uShield1)
-    bool_list_2 = card2shield_input_msg(uShield0)
+        # Has the order {+x, -x, +y, -y, +z, -z}
+        bool_list_1 = card2shield_input_msg(uShield1)
+        bool_list_2 = card2shield_input_msg(uShield0)
 
-    ############### Code for figuring out the dx and dy ####################
-    print('Sleeping for 0.5 seconds')
-    rospy.sleep(0.5)
-    send_shield_pub_1.publish(bool_list_1)
-    send_shield_pub_2.publish(bool_list_2)
+        ############### Code for figuring out the dx and dy ####################
+        send_shield_pub_1.publish(bool_list_1)
+        send_shield_pub_2.publish(bool_list_2)
 
-    # Create the subscriber to receive dx adn dy
-    print('Sleeping for 0.5 seconds')
-    rospy.sleep(0.5)
-    rospy.Subscriber(quad_ros_namespace1 + '/shield_orders_pos', ShieldOutput, shield_orders_callback1)
-    rospy.Subscriber(quad_ros_namespace2 + '/shield_orders_pos', ShieldOutput, shield_orders_callback0)
+        # # Create the subscriber to receive dx adn dy
+        rospy.Subscriber(quad_ros_namespace1 + '/shield_orders_pos', ShieldOutput, shield_orders_callback1)
+        rospy.Subscriber(quad_ros_namespace2 + '/shield_orders_pos', ShieldOutput, shield_orders_callback0)
 
-    print('Sleeping for 1 second')
-    rospy.sleep(1)
-    action1 = position_change1.posChange[1]
-    action0 = position_change0.posChange[0]
+        while True:
+            if 'position_change1' in globals() and 'position_change0' in globals():
+                action1 = position_change1.posChange[0]
+                action0 = position_change0.posChange[1]
+                # del globals()['position_change1']
+                # del globals()['position_change0']
+                break
+            else:
+                pass
 
-    print(position_change1)
-    print(position_change0)
-    sys.exit()
+    # ---------------------------------- End new code for implementing the position change with seperate node ----------------------------------- #
 
-# ---------------------------------- End new code for implementing the position change with seperate node ----------------------------------- #
+        # Update traj
+        temp_s1 = Point(x_traj_s1[counter] , y_traj_s1[counter] + action1, 2)
+        x_traj_s1.append(temp_s1.x)
+        y_traj_s1.append(temp_s1.y)
+        z_traj_s1.append(temp_s1.z)
 
-    # Update traj
-    temp_s1 = Point(x_traj_s1[counter] , y_traj_s1[counter] + action1, 2)
-    x_traj_s1.append(temp_s1.x)
-    y_traj_s1.append(temp_s1.y)
-    z_traj_s1.append(temp_s1.z)
+        temp_s0 = Point(x_traj_s0[counter] + action0, y_traj_s0[counter], 2)
+        x_traj_s0.append(temp_s0.x)
+        y_traj_s0.append(temp_s0.y)
+        z_traj_s0.append(temp_s0.z)
 
-    temp_s0 = Point(x_traj_s0[counter] + action0, y_traj_s0[counter], 2)
-    x_traj_s0.append(temp_s0.x)
-    y_traj_s0.append(temp_s0.y)
-    z_traj_s0.append(temp_s0.z)
+        counter = counter + 1
 
-    counter = counter + 1
+        # Make the trajectory list for s1(uav1) and s0(uav2)
+        pva_list_1 = generate_traj_3d(x=x_traj_s1[-2:] , y=y_traj_s1[-2:] , z=z_traj_s1[-2:] , traj_time=[0,time_traj] , corr=None , freq = freq)
+        pva_list_2 = generate_traj_3d(x=x_traj_s0[-2:] , y=y_traj_s0[-2:] , z=z_traj_s0[-2:] , traj_time=[0,time_traj] , corr=None , freq = freq)
 
-    # Make the trajectory list for s1(uav1) and s0(uav2)
-    pva_list_1 = generate_traj_3d(x=x_traj_s1[-2:] , y=y_traj_s1[-2:] , z=z_traj_s1[-2:] , traj_time=[0,time_traj] , corr=None , freq = freq)
-    pva_list_2 = generate_traj_3d(x=x_traj_s0[-2:] , y=y_traj_s0[-2:] , z=z_traj_s0[-2:] , traj_time=[0,time_traj] , corr=None , freq = freq)
-
-    # Send the generated traj to the vehicles one at a time
-    for i in range(len(pva_list_1.pva)):
-        send_pva_pub_1.publish(pva_list_1.pva[i])
-        # wait_rate.sleep()
-    for j in range(len(pva_list_2.pva)):
-        send_pva_pub_2.publish(pva_list_2.pva[i])
-        wait_rate.sleep()
+        # Send the generated traj to the vehicles one at a time
+        for i in range(len(pva_list_1.pva)):
+            send_pva_pub_1.publish(pva_list_1.pva[i])
+            # wait_rate.sleep()
+        for j in range(len(pva_list_2.pva)):
+            send_pva_pub_2.publish(pva_list_2.pva[i])
+            wait_rate.sleep()
 
 
 

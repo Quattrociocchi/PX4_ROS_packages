@@ -18,6 +18,7 @@ add_message_files(
    WayPoints.msg
    ShieldInput.msg
    ShieldOutput.msg
+   ShieldBool.msg
  )
 
  add_service_files(
