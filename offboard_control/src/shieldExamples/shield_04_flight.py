@@ -36,20 +36,25 @@ if __name__ == "__main__":
     quad_ros_namespace3 = "/uav3"
     quad_ros_namespace4 = "/uav4"
     # Start by taking off
+    rospy.sleep(0.5)
     start_pva_control(quad_name= quad_ros_namespace1 , takeoff_before= True)
+    rospy.sleep(0.5)
     start_pva_control(quad_name= quad_ros_namespace2 , takeoff_before= True)
+    rospy.sleep(0.5)
     start_pva_control(quad_name= quad_ros_namespace3 , takeoff_before= True)
+    rospy.sleep(0.5)
     start_pva_control(quad_name= quad_ros_namespace4 , takeoff_before= True)
+    rospy.sleep(0.5)
     # Set up action publishers
     action_pub_1 = rospy.Publisher(quad_ros_namespace1 + '/shield_action_orders', ShieldOutput , queue_size=10)
     action_pub_2 = rospy.Publisher(quad_ros_namespace2 + '/shield_action_orders', ShieldOutput , queue_size=10)
     action_pub_3 = rospy.Publisher(quad_ros_namespace3 + '/shield_action_orders', ShieldOutput , queue_size=10)
     action_pub_4 = rospy.Publisher(quad_ros_namespace4 + '/shield_action_orders', ShieldOutput , queue_size=10)
     # Action list
-    action_list_1 = [5, 14, 1, 15]
-    action_list_2 = [13, 15, 8, 14]
-    action_list_3 = [14, 14, 9, 3]
-    action_list_4 = [14, 14, 14, 7]
+    action_list_1 = [4, 17, 17]
+    action_list_2 = [12, 17, 17]
+    action_list_3 = [7, 10, 17]
+    action_list_4 = [14, 17, 15]
     # Create action messages
     action_msg_1 = ShieldOutput()
     action_msg_1.action = [action_list_1[0]]

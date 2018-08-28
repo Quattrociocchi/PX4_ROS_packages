@@ -2,6 +2,7 @@
 
 
 import rospy
+import math
 import sys
 sys.path.insert( 0 , '/home/jaq394l/catkin_ws/src/PX4_ROS_packages/offboard_control/src')
 # import csv
@@ -188,9 +189,25 @@ if __name__ == "__main__":
                 y_traj = [current_pos.position.y, current_pos.position.y]
                 z_traj = [current_pos.position.z, current_pos.position.z - 1]
                 z_nom = z_nom - 1
+            elif action == 16:
+                # This action maintains current position
+                x_traj = [current_pos.position.x, current_pos.position.x]
+                y_traj = [current_pos.position.y, current_pos.position.y]
+                z_traj = [current_pos.position.z, current_pos.position.z]
+            elif action == 17:
+                # This action flies a circle
+                x_traj = [current_pos.position.x]
+                y_traj = [current_pos.position.y]
+                z_traj = [current_pos.position.z]
 
+                delta_theta = math.pi / 8
+                for ii in range(1, 16):
+                    x_traj.append(current_pos.position.x + 0.75*math.cos(ii * delta_theta) - 1)
+                    y_traj.append(current_pos.position.y + 0.75*math.sin(ii * delta_theta))
+                    z_traj.append(current_pos.position.z)
             else:
                 print('The action choice you have made is not valid. Try again you crazy cat 8-D')
+                pass
 
             # -------------------------------------------------------------------------------- #
 
