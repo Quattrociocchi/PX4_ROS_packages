@@ -51,161 +51,145 @@ if __name__ == "__main__":
 
             # ----------------------------- Choose the action ----------------------------- #
             if action == 0:
-                # Set the waypoints for action 0
-                Target0 = Point(0, 0, z_nom)
-                # Build the trajectory
-                x_traj = [current_pos.position.x, Target0.x - xOffset]
-                y_traj = [current_pos.position.y, Target0.y - yOffset]
-                z_traj = [current_pos.position.z, Target0.z]
+                # Entrance to lane A.
+                wp1 = Point(4.5, 3, z_nom)
+                x_traj = [current_pos.position.x, wp1.x - xOffset]
+                y_traj = [current_pos.position.y, wp1.y - yOffset]
+                z_traj = [current_pos.position.z, wp1.z          ]
 
-            elif action == 1:
-                # Set the waypoints for action 1
-                Target0 = Point(0, 0, z_nom)
-                TargetA = Point(3, 3, z_nom)
-                TargetB = Point(3, 9, z_nom)
-                # Build the trajectory
-                x_traj = [current_pos.position.x, TargetB.x - xOffset, TargetA.x - xOffset, Target0.x - xOffset]
-                y_traj = [current_pos.position.y, TargetB.y - yOffset, TargetA.y - yOffset, Target0.y - yOffset]
-                z_traj = [current_pos.position.z, TargetB.z, TargetA.z, Target0.z]
+            if action == 1:
+                wp1 = Point(4.5, 6, z_nom - 1)
+                x_traj = [current_pos.position.x, wp1.x - xOffset]
+                y_traj = [current_pos.position.y, wp1.y - yOffset]
+                z_traj = [current_pos.position.z, wp1.z          ]
 
             elif action == 2:
-                # Set the waypoints for action 2
-                Target0 = Point(0, 0, z_nom)
-                Target1 = Point(0, 6, z_nom)
-                # Build the trajectory
-                x_traj = [current_pos.position.x, Target1.x - xOffset, Target0.x - xOffset]
-                y_traj = [current_pos.position.y, Target1.y - yOffset, Target0.y - yOffset]
-                z_traj = [current_pos.position.z, Target1.z, Target0.z]
+                wp1 = Point(4.5, 15, z_nom - 1)
+                x_traj = [current_pos.position.x, wp1.x - xOffset]
+                y_traj = [current_pos.position.y, wp1.y - yOffset]
+                z_traj = [current_pos.position.z, wp1.z          ]
 
             elif action == 3:
-                # Set the waypoints for action 3
-                Target1 = Point(0, 6, z_nom)
-                # Build the trajectory
-                x_traj = [current_pos.position.x, Target1.x - xOffset]
-                y_traj = [current_pos.position.y, Target1.y - yOffset]
-                z_traj = [current_pos.position.z, Target1.z]
+                wp1 = Point(4.5, 24, z_nom - 1)
+                x_traj = [current_pos.position.x, wp1.x - xOffset]
+                y_traj = [current_pos.position.y, wp1.y - yOffset]
+                z_traj = [current_pos.position.z, wp1.z          ]
 
             elif action == 4:
-                # Set the waypoints for action 4
-                Target2 = Point(0, 12, z_nom)
-                # Build the trajectory
-                x_traj = [current_pos.position.x, Target2.x - xOffset]
-                y_traj = [current_pos.position.y, Target2.y - yOffset]
-                z_traj = [current_pos.position.z, Target2.z]
+                wp1 = Point(9, 6, z_nom - 1)
+                x_traj = [current_pos.position.x, wp1.x - xOffset]
+                y_traj = [current_pos.position.y, wp1.y - yOffset]
+                z_traj = [current_pos.position.z, wp1.z          ]
 
             elif action == 5:
-                # Set the waypoints for action 5
-                Target2 = Point(0, 12, z_nom)
-                TargetA = Point(3, 3, z_nom)
-                TargetB = Point(3, 9, z_nom)
-                # Build the trajectory
-                x_traj = [current_pos.position.x, TargetA.x - xOffset, TargetB.x - xOffset, Target2.x - xOffset]
-                y_traj = [current_pos.position.y, TargetA.y - yOffset, TargetB.y - yOffset, Target2.y - yOffset]
-                z_traj = [current_pos.position.z, TargetA.z, TargetB.z, Target2.z]
+                wp1 = Point(9, 15, z_nom - 1)
+                x_traj = [current_pos.position.x, wp1.x - xOffset]
+                y_traj = [current_pos.position.y, wp1.y - yOffset]
+                z_traj = [current_pos.position.z, wp1.z          ]
 
             elif action == 6:
-                # Set the waypoints for action 6
-                Target2 = Point(0, 12, z_nom)
-                Target1 = Point(0, 6, z_nom)
-                # Build the trajectory
-                x_traj = [current_pos.position.x, Target1.x - xOffset, Target2.x - xOffset]
-                y_traj = [current_pos.position.y, Target1.y - yOffset, Target2.y - yOffset]
-                z_traj = [current_pos.position.z, Target1.z, Target2.z]
+                wp1 = Point(9, 24, z_nom - 1)
+                x_traj = [current_pos.position.x, wp1.x - xOffset]
+                y_traj = [current_pos.position.y, wp1.y - yOffset]
+                z_traj = [current_pos.position.z, wp1.z          ]
 
             elif action == 7:
-                # Set the waypoints for action 7
-                Target3 = Point(6, 0, z_nom)
-                # Build the trajectory
-                x_traj = [current_pos.position.x, Target3.x - xOffset]
-                y_traj = [current_pos.position.y, Target3.y - yOffset]
-                z_traj = [current_pos.position.z, Target3.z]
+                wp1 = Point(4.5, 6, z_nom + 1)
+                x_traj = [current_pos.position.x, wp1.x - xOffset]
+                y_traj = [current_pos.position.y, wp1.y - yOffset]
+                z_traj = [current_pos.position.z, wp1.z          ]
 
             elif action == 8:
-                # Set the waypoints for action 8
-                Target3 = Point(6, 0, z_nom)
-                TargetA = Point(3, 3, z_nom)
-                TargetB = Point(3, 9, z_nom)
-                # Build the trajectory
-                x_traj = [current_pos.position.x, TargetB.x - xOffset, TargetA.x - xOffset, Target3.x - xOffset]
-                y_traj = [current_pos.position.y, TargetB.y - yOffset, TargetA.y - yOffset, Target3.y - yOffset]
-                z_traj = [current_pos.position.z, TargetB.z, TargetA.z, Target3.z]
+                wp1 = Point(4.5, 15, z_nom + 1)
+                x_traj = [current_pos.position.x, wp1.x - xOffset]
+                y_traj = [current_pos.position.y, wp1.y - yOffset]
+                z_traj = [current_pos.position.z, wp1.z          ]
 
             elif action == 9:
-                # Set the waypoints for action 9
-                Target3 = Point(6, 0, z_nom)
-                Target4 = Point(6, 6, z_nom)
-                # Build the trajectory
-                x_traj = [current_pos.position.x, Target4.x - xOffset, Target3.x - xOffset]
-                y_traj = [current_pos.position.y, Target4.y - yOffset, Target3.y - yOffset]
-                z_traj = [current_pos.position.z, Target4.z, Target3.z]
+                wp1 = Point(4.5, 24, z_nom + 1)
+                x_traj = [current_pos.position.x, wp1.x - xOffset]
+                y_traj = [current_pos.position.y, wp1.y - yOffset]
+                z_traj = [current_pos.position.z, wp1.z          ]
 
             elif action == 10:
-                # Set the waypoints for action 10
-                Target4 = Point(6, 6, z_nom)
-                # Build the trajectory
-                x_traj = [current_pos.position.x, Target4.x - xOffset]
-                y_traj = [current_pos.position.y, Target4.y - yOffset]
-                z_traj = [current_pos.position.z, Target4.z]
+                wp1 = Point(9, 6, z_nom + 1)
+                x_traj = [current_pos.position.x, wp1.x - xOffset]
+                y_traj = [current_pos.position.y, wp1.y - yOffset]
+                z_traj = [current_pos.position.z, wp1.z          ]
 
             elif action == 11:
-                # Set the waypoints for action 11
-                Target5 = Point(6, 12, z_nom)
-                # Build the trajectory
-                x_traj = [current_pos.position.x, Target5.x - xOffset]
-                y_traj = [current_pos.position.y, Target5.y - yOffset]
-                z_traj = [current_pos.position.z, Target5.z]
+                wp1 = Point(9, 15, z_nom + 1)
+                x_traj = [current_pos.position.x, wp1.x - xOffset]
+                y_traj = [current_pos.position.y, wp1.y - yOffset]
+                z_traj = [current_pos.position.z, wp1.z          ]
 
             elif action == 12:
-                # Set the waypoints for action 12
-                Target5 = Point(6, 12, z_nom)
-                TargetA = Point(3, 3, z_nom)
-                TargetB = Point(3, 9, z_nom)
-                # Build the trajectory
-                x_traj = [current_pos.position.x, TargetA.x - xOffset, TargetB.x - xOffset, Target5.x - xOffset]
-                y_traj = [current_pos.position.y, TargetA.y - yOffset, TargetB.y - yOffset, Target5.y - yOffset]
-                z_traj = [current_pos.position.z, TargetA.z, TargetB.z, Target5.z]
+                wp1 = Point(9, 24, z_nom + 1)
+                x_traj = [current_pos.position.x, wp1.x - xOffset]
+                y_traj = [current_pos.position.y, wp1.y - yOffset]
+                z_traj = [current_pos.position.z, wp1.z          ]
 
             elif action == 13:
-                # Set the waypoints for action 13
-                Target4 = Point(6, 6, z_nom)
-                Target5 = Point(6, 12, z_nom)
-                # Build the trajectory
-                x_traj = [current_pos.position.x, Target4.x - xOffset, Target5.x - xOffset]
-                y_traj = [current_pos.position.y, Target4.y - yOffset, Target5.y - yOffset]
-                z_traj = [current_pos.position.z, Target4.z, Target5.z]
+                wp1 = Point(4, 0, 1.8)
+                wp2 = Point(0.5, 0, 1.2)
+                x_traj = [current_pos.position.x, wp1.x - xOffset, wp2.x - xOffset]
+                y_traj = [current_pos.position.y, wp1.y - yOffset, wp2.y - yOffset]
+                z_traj = [current_pos.position.z, wp1.z          , wp2.z          ]
 
             elif action == 14:
-                # This action increases z by 1
-                # Build the trajectory
-                x_traj = [current_pos.position.x, current_pos.position.x]
-                y_traj = [current_pos.position.y, current_pos.position.y]
-                z_traj = [current_pos.position.z, current_pos.position.z + 1]
-                z_nom = z_nom + 1
+                wp1 = Point(9, 1, 1.5)
+                wp2 = Point(11.8, 0.55, 0.1)
+                x_traj = [current_pos.position.x, wp1.x - xOffset, wp2.x - xOffset]
+                y_traj = [current_pos.position.y, wp1.y - yOffset, wp2.y - yOffset]
+                z_traj = [current_pos.position.z, wp1.z          , wp2.z          ]
 
             elif action == 15:
-                # This action decreases z by 1
-                # Build the trajectory
-                x_traj = [current_pos.position.x, current_pos.position.x]
-                y_traj = [current_pos.position.y, current_pos.position.y]
-                z_traj = [current_pos.position.z, current_pos.position.z - 1]
-                z_nom = z_nom - 1
+                # Entrance to lane B.
+                wp1 = Point(9, 3, z_nom)
+                x_traj = [current_pos.position.x, wp1.x - xOffset]
+                y_traj = [current_pos.position.y, wp1.y - yOffset]
+                z_traj = [current_pos.position.z, wp1.z          ]
+
             elif action == 16:
                 # This action maintains current position
                 x_traj = [current_pos.position.x, current_pos.position.x]
                 y_traj = [current_pos.position.y, current_pos.position.y]
                 z_traj = [current_pos.position.z, current_pos.position.z]
-            elif action == 17:
-                # This action flies a circle
-                x_traj = [current_pos.position.x]
-                y_traj = [current_pos.position.y]
-                z_traj = [current_pos.position.z]
 
-                delta_theta = math.pi / 8
-                for ii in range(1, 16):
-                    x_traj.append(current_pos.position.x + 0.75*math.cos(ii * delta_theta) - 1)
-                    y_traj.append(current_pos.position.y + 0.75*math.sin(ii * delta_theta))
-                    z_traj.append(current_pos.position.z)
+            # elif action == 17:
+                
+
+            # elif action == 18:
+            #     # This action increases z by 1
+            #     x_traj = [current_pos.position.x, current_pos.position.x]
+            #     y_traj = [current_pos.position.y, current_pos.position.y]
+            #     z_traj = [current_pos.position.z, current_pos.position.z + 1]
+            #     z_nom = z_nom + 1
+
+            # elif action == 19:
+            #     # This action decreases z by 1
+            #     x_traj = [current_pos.position.x, current_pos.position.x]
+            #     y_traj = [current_pos.position.y, current_pos.position.y]
+            #     z_traj = [current_pos.position.z, current_pos.position.z - 1]
+            #     z_nom = z_nom - 1
+
+            # elif action == 20:
+                
+
+            # elif action == 21:
+            #     # This action flies a circle
+            #     x_traj = [current_pos.position.x]
+            #     y_traj = [current_pos.position.y]
+            #     z_traj = [current_pos.position.z]
+
+            #     delta_theta = math.pi / 8
+            #     for ii in range(1, 16):
+            #         x_traj.append(current_pos.position.x + 0.75*math.cos(ii * delta_theta) - 1)
+            #         y_traj.append(current_pos.position.y + 0.75*math.sin(ii * delta_theta))
+            #         z_traj.append(current_pos.position.z)
+
             else:
+                # This does not work. Why?
                 print('The action choice you have made is not valid. Try again you crazy cat 8-D')
                 pass
 
