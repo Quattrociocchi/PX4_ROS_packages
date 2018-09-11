@@ -27,24 +27,31 @@ if __name__ == "__main__":
     # Set up action publishers
     action_pub_2 = rospy.Publisher(quad_ros_namespace2 + '/shield_action_orders', ShieldOutput , queue_size=10)
     # Action list
-    action_list_2 = [16]
+    action_list_2 = [16, 0, 17, 0, 8, 0, 13, 16, 16, 17]
     # Create action messages
     action_msg_2 = ShieldOutput()
+    # Publish first action -----> comment out next 3 lines to use terminal input
+    action_msg_2.action = [action_list_2[0]]
+    rospy.sleep(0.5)
+    action_pub_2.publish(action_msg_2)
     # Set up subscriber for completed trajectory flag
     rospy.Subscriber(quad_ros_namespace2 + '/trajComplete', ShieldBool, trajComplete_callback)
 
-    global trajComplete2
-    trajComplete2 = True
+    # # Uncomment to use terminal input
+    # global trajComplete2
+    # trajComplete2 = True
 
-    counter = 0
+    trash = input("Enter any number to begin: ")
+
+    counter = 1
     while not rospy.is_shutdown():
         if 'trajComplete2' in globals():
-            # Uncomment for terminal control
-            data = input("Enter the action you would like the quad to perform:")
-            action_msg_2.action = [data]
+            # # Uncomment for terminal control
+            # data = input("Enter the action you would like the quad to perform:")
+            # action_msg_2.action = [data]
 
-            # action_msg_3.action = [action_list_3[counter]]
-            rospy.sleep(0.5)
+            action_msg_2.action = [action_list_2[counter]]
+            # rospy.sleep(0.5)
             action_pub_2.publish(action_msg_2)
 
             counter = counter + 1

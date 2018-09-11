@@ -30,14 +30,5 @@
         <param name="time_full_traj" value="10" />
     </node>
 
-<!-- - - - - - - - - - - - - - - - - - - - UAV 4 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
-    <node pkg="offboard_control" name="Quad4_action" type="shield_action.py" output="screen">
-        <param name="quad_ros_namespace" value="/uav4" />
-        <param name="xOffset" value="0" />
-        <param name="yOffset" value="0" />
-        <param name="zOffset" value="0" />
-        <param name="freq" value="20" />
-        <param name="time_full_traj" value="10" />
-    </node>
 
 </launch>

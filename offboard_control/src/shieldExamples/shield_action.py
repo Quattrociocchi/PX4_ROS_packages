@@ -57,7 +57,7 @@ if __name__ == "__main__":
                 y_traj = [current_pos.position.y, wp1.y - yOffset]
                 z_traj = [current_pos.position.z, wp1.z          ]
 
-            if action == 1:
+            elif action == 1:
                 wp1 = Point(4.5, 6, z_nom - 1)
                 x_traj = [current_pos.position.x, wp1.x - xOffset]
                 y_traj = [current_pos.position.y, wp1.y - yOffset]
@@ -130,13 +130,15 @@ if __name__ == "__main__":
                 z_traj = [current_pos.position.z, wp1.z          ]
 
             elif action == 13:
-                wp1 = Point(4, 0, 1.8)
+                # Ramp
+                wp1 = Point(4, 0, 1.9)
                 wp2 = Point(0.5, 0, 1.2)
                 x_traj = [current_pos.position.x, wp1.x - xOffset, wp2.x - xOffset]
                 y_traj = [current_pos.position.y, wp1.y - yOffset, wp2.y - yOffset]
                 z_traj = [current_pos.position.z, wp1.z          , wp2.z          ]
 
             elif action == 14:
+                # Charging station
                 wp1 = Point(9, 1, 1.5)
                 wp2 = Point(11.8, 0.55, 0.1)
                 x_traj = [current_pos.position.x, wp1.x - xOffset, wp2.x - xOffset]
@@ -156,15 +158,19 @@ if __name__ == "__main__":
                 y_traj = [current_pos.position.y, current_pos.position.y]
                 z_traj = [current_pos.position.z, current_pos.position.z]
 
-            # elif action == 17:
+            elif action == 17:
+                # Standby location
+                wp1 = Point(6.5, 1, 4.5)
+                x_traj = [current_pos.position.x, current_pos.position.x    , wp1.x - xOffset]
+                y_traj = [current_pos.position.y, current_pos.position.y    , wp1.y - yOffset]
+                z_traj = [current_pos.position.z, current_pos.position.z + 1, wp1.z          ]
                 
-
-            # elif action == 18:
-            #     # This action increases z by 1
-            #     x_traj = [current_pos.position.x, current_pos.position.x]
-            #     y_traj = [current_pos.position.y, current_pos.position.y]
-            #     z_traj = [current_pos.position.z, current_pos.position.z + 1]
-            #     z_nom = z_nom + 1
+            elif action == 18:
+                # Avoidance action.
+                wp1 = Point(6.5, 1, 4)
+                x_traj = [current_pos.position.x, wp1.x - xOffset, current_pos.position.x]
+                y_traj = [current_pos.position.y, wp1.y - yOffset, current_pos.position.y]
+                z_traj = [current_pos.position.z, wp1.z          , current_pos.position.z]
 
             # elif action == 19:
             #     # This action decreases z by 1
