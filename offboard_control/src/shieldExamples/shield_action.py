@@ -131,7 +131,7 @@ if __name__ == "__main__":
 
             elif action == 13:
                 # Ramp
-                wp1 = Point(4, 0, 1.9)
+                wp1 = Point(4, 0, 2)
                 wp2 = Point(0.5, 0, 1.2)
                 x_traj = [current_pos.position.x, wp1.x - xOffset, wp2.x - xOffset]
                 y_traj = [current_pos.position.y, wp1.y - yOffset, wp2.y - yOffset]
@@ -140,7 +140,7 @@ if __name__ == "__main__":
             elif action == 14:
                 # Charging station
                 wp1 = Point(9, 1, 1.5)
-                wp2 = Point(11.8, 0.55, 0.1)
+                wp2 = Point(11.8, 0.55, 0.2)
                 x_traj = [current_pos.position.x, wp1.x - xOffset, wp2.x - xOffset]
                 y_traj = [current_pos.position.y, wp1.y - yOffset, wp2.y - yOffset]
                 z_traj = [current_pos.position.z, wp1.z          , wp2.z          ]
