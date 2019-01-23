@@ -77,21 +77,3 @@ if __name__ == "__main__":
 
         else:
             pass
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# # Publish the resulting change in position
-# print('Sleeping for 0.5 seconds')
-# rospy.sleep(0.5)

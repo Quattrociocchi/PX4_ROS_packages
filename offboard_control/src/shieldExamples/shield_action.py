@@ -1,9 +1,9 @@
 #!/usr/bin/env python
+''' Actions for the shield '''
 
-
-import rospy
-import math
 import sys
+import math
+import rospy
 sys.path.insert( 0 , '/home/jaq394l/catkin_ws/src/PX4_ROS_packages/offboard_control/src')
 # import csv
 from qcontrol_defs.msg import *
@@ -219,5 +219,3 @@ if __name__ == "__main__":
 
         else:
             pass
-
-
