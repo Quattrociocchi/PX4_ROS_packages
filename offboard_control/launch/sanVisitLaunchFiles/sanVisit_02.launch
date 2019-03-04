@@ -1,0 +1,13 @@
+<launch>
+
+<!-- - - - - - - - - - - - - - - - - - - - UAV 1 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <node pkg="offboard_control" name="Quad1_action" type="quad_action_sanVisit_02.py" output="screen">
+        <param name="quad_ros_namespace" value="/uav1" />
+        <param name="xOffset" value="10.645" />
+        <param name="yOffset" value="-3.5" />
+        <param name="zOffset" value="0" />
+        <param name="freq" value="20" />
+        <param name="time_full_traj" value="5" />
+    </node>
+
+</launch>

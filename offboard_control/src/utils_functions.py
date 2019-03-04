@@ -10,37 +10,95 @@ from geometry_msgs.msg import Point
 from math import floor
 
 
-class Grid:
-    #To being able to superpose this with tulip and the ENU coordinate system
-    # x here represent X in ENU and also the number of row
-    # y here represent Y in ENU and also the number of column
-    def __init__(self, x, y, base, maximum):
+# class Grid:
+#     #To being able to superpose this with tulip and the ENU coordinate system
+#     # x here represent X in ENU and also the number of row
+#     # y here represent Y in ENU and also the number of column
+#     def __init__(self, x, y, base, maximum):
 
-        self.x = x
-        self.y = y
+#         self.x = x
+#         self.y = y
+#         self.base = base
+#         self.maximum = maximum
+#         self.blocklengthX = (float(maximum.x - base.x))/x
+#         self.blocklengthY = (float(maximum.y - base.y))/y
+
+#     def vicon2state(self, position):
+#         new_position = Point()
+#         assert(position.x >= self.base.x and position.x <= self.maximum.x), "x position %r is out of bounds! It should be at least %r and at most %r. " % (position.x, self.base.x, self.maximum.x)
+#         assert(position.y >= self.base.y and position.y <= self.maximum.y), "y position %r is out of bounds! It should be at least %r and at most %r.  " % (position.y, self.base.y, self.maximum.y)
+#         new_position.y = int((position.y - self.base.y)/self.blocklengthY)
+#         new_position.x = int((position.x - self.base.x)/self.blocklengthX)
+#         assert(new_position.x >= 0 and new_position.x <= self.x), "x position %r is out of bounds! It should be at least %r and at most %r.  " % (new_position.x, 0, self.x)
+#         assert(new_position.y >= 0 and new_position.y <= self.y), "y position %r is out of bounds! It should be at least %r and at most %r.  " % (new_position.y, 0, self.y)
+#         state = floor(new_position.y) + (floor(new_position.x)*self.y)
+#         return int(state)
+
+#     def state2vicon(self, state):
+#         xaxis = state / self.y
+#         yaxis = state % self.y
+#         position = Point()
+#         position.x = self.base.x + (self.blocklengthX/2.) + (xaxis * self.blocklengthX ) 
+#         position.y = self.base.y + (self.blocklengthY/2.) + (yaxis * self.blocklengthY ) 
+#         position.z = self.base.z
+#         return position
+
+#     def vicon2state_list(self , position):
+#         res = list()
+#         for elem in position:
+#             res.append(self.vicon2state(elem))
+#         return res
+
+
+
+''' The following is to convert from state 0 being in the bottom left to state 0 being in the top left '''
+def row_converter(self, curr_row, curr_col):
+    new_col = curr_col
+    new_row = self.row - curr_row - 1
+    return new_row, new_col
+
+class Grid:
+    # x is right
+    # y is up
+    def __init__(self, nb_row, nb_col, base, maximum):
+
+        self.row = nb_row
+        self.col = nb_col
         self.base = base
         self.maximum = maximum
-        self.blocklengthX = (float(maximum.x - base.x))/x
-        self.blocklengthY = (float(maximum.y - base.y))/y
+        self.blocklengthX = (float(maximum.x - base.x))/ nb_col
+        self.blocklengthY = (float(maximum.y - base.y))/ nb_row
 
     def vicon2state(self, position):
-        new_position = Point()
+        curr_row = 0
+        curr_col = 0
         assert(position.x >= self.base.x and position.x <= self.maximum.x), "x position %r is out of bounds! It should be at least %r and at most %r. " % (position.x, self.base.x, self.maximum.x)
         assert(position.y >= self.base.y and position.y <= self.maximum.y), "y position %r is out of bounds! It should be at least %r and at most %r.  " % (position.y, self.base.y, self.maximum.y)
-        new_position.y = int((position.y - self.base.y)/self.blocklengthY)
-        new_position.x = int((position.x - self.base.x)/self.blocklengthX)
-        assert(new_position.x >= 0 and new_position.x <= self.x), "x position %r is out of bounds! It should be at least %r and at most %r.  " % (new_position.x, 0, self.x)
-        assert(new_position.y >= 0 and new_position.y <= self.y), "y position %r is out of bounds! It should be at least %r and at most %r.  " % (new_position.y, 0, self.y)
-        state = floor(new_position.y) + (floor(new_position.x)*self.y)
+        curr_row = int((position.y - self.base.y)/self.blocklengthY)
+        curr_col = int((position.x - self.base.x)/self.blocklengthX)
+        assert(curr_col >= 0 and curr_col<= self.col), "x position %r is out of bounds! It should be at least %r and at most %r.  " % (curr_col, 0, self.col)
+        assert(curr_row >= 0 and curr_row <= self.row), "y position %r is out of bounds! It should be at least %r and at most %r.  " % (curr_row, 0, self.row)
+        # # The following is for returning a state where the 0 state is at the bottom left
+        # state = floor(curr_col) + (floor(curr_row)*self.col)
+
+        # The following is for changing the state numbering scheme from bottom left to top left
+        new_row, new_col = row_converter(self, curr_row, curr_col)
+        state = floor(new_col) + (floor(new_row)*self.col)
         return int(state)
 
     def state2vicon(self, state):
-        xaxis = state / self.y
-        yaxis = state % self.y
+        curr_col = state % self.col
+        curr_row = state / self.col
         position = Point()
-        position.x = self.base.x + (self.blocklengthX/2.) + (xaxis * self.blocklengthX ) 
-        position.y = self.base.y + (self.blocklengthY/2.) + (yaxis * self.blocklengthY ) 
         position.z = self.base.z
+        # # The following is for when the 0 state is at the bottom left
+        # position.x = self.base.x + (self.blocklengthX/2.) + (curr_col * self.blocklengthX ) 
+        # position.y = self.base.y + (self.blocklengthY/2.) + (curr_row * self.blocklengthY )
+        
+        # The following is for changing from top left back to bottom left
+        new_row, new_col = row_converter(self, curr_row, curr_col)
+        position.x = self.base.x + (self.blocklengthX/2.) + (new_col * self.blocklengthX ) 
+        position.y = self.base.y + (self.blocklengthY/2.) + (new_row * self.blocklengthY )  
         return position
 
     def vicon2state_list(self , position):
@@ -48,6 +106,9 @@ class Grid:
         for elem in position:
             res.append(self.vicon2state(elem))
         return res
+
+
+
 
 # From a list of 2D x target waypoint and y target waypoint  generate a trajectory from
 ### min_snap algorithm to reach all these targets
@@ -162,7 +223,7 @@ def start_takeoff(quad_name):
     reponse =  cmd_srv(cmdAction)
     takeoff_wait.sleep()
 
-# Land the vehicule
+# Land the vehicle
 def start_landing(quad_name):
     rospy.wait_for_service(quad_name + '/qcontrol/commands')
     cmd_srv = rospy.ServiceProxy(quad_name + '/qcontrol/commands', CommandAction)
