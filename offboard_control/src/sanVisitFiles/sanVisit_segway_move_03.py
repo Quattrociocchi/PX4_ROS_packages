@@ -166,8 +166,8 @@ if __name__ == "__main__":
     # Setup waypoint message variable
     waypoint = PoseStamped()
     waypoint.header.frame_id = 'map'
-    waypoint.pose.orientation.w = 0.05
-    waypoint.pose.orientation.z = -1
+    waypoint.pose.orientation.w = 0.10033986
+    waypoint.pose.orientation.z = -0.99495322
     # Set up the segway status subscriber
     rospy.Subscriber('segway_move_base/status', GoalStatusArray, status_callback)
     # segway_status_sub = rospy.Subscriber('segway_move_base/status', GoalStatusArray, status_callback) <--- FOR REFERENCE. DELETE WHEN FINISHED
