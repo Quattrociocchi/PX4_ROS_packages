@@ -1,0 +1,2 @@
+Game State:    0  |  Segway State:  321  |  Quad State:  986
+Game State:   17  |  Segway State: 1055  |  Quad State:  984
