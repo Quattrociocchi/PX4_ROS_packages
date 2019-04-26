@@ -104,7 +104,7 @@ def next_game_and_agent_state(automaton, game_state, target_state, iset):
                 break
     else:
         for k in automaton[game_state]['Successors']:
-            if automaton[k]['State']['st'] > 1053:
+            if automaton[k]['State']['st'] > 1053: # SUPER SPECIFIC TO THIS IMPLEMENTATION 34*31
                 new_game_state = k
                 break
     assert new_game_state != None, 'No successor found!'
