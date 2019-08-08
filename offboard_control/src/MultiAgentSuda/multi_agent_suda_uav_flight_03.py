@@ -167,7 +167,7 @@ if __name__ == "__main__":
 
 ##########################################################  NEED to clean this up at some point  ##################
 
-    # Make sure to state the agent and the target far enough from each other such thehat the games initial conditions do not violate safety.
+    # Make sure to start the agent and the target far enough from each other such thehat the games initial conditions do not violate safety.
     mapname = 'Q_building_3'
     scale = (41,41)
     filename = [AbsPath + mapname + '.pgm',scale,cv2.INTER_LINEAR_EXACT]
