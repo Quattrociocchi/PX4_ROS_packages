@@ -68,9 +68,12 @@ include_directories(
 
 add_definitions( -DEIGEN_USE_BLAS -DEIGEN_USE_LAPACKE)
 
+
 add_library( ${PROJECT_NAME} SHARED
   min_snap.cpp
 )
+
+add_dependencies(${PROJECT_NAME} OpenBLAS_INSTALL)
 
 target_link_libraries( ${PROJECT_NAME}
   ${CHOLMOD_LIBRARIES}
