@@ -21,14 +21,12 @@ if __name__ == "__main__":
 
     # Create a publisher to send target positions
     send_pva_pub = rospy.Publisher(quad_ros_namespace + '/qcontrol/pva_control', PVA , queue_size=10)
-    
     # Start position control with taking off at the beginning
     start_pva_control(quad_name= quad_ros_namespace , takeoff_before= False)
 
     # It's assume the vehicle is initially at 0,0,0 position but the real position
     # can be obtained by subscribing to the appropriate mavros topic
     current_pos = Point(0,0,0)
-
     target1 = Point(0 , 0 , 4)
     target2 = Point(-3 , 2 , 1)
 
@@ -40,7 +38,6 @@ if __name__ == "__main__":
     x_traj = [current_pos.x , target1.x , target2.x]
     y_traj = [current_pos.y , target1.y , target2.y]
     z_traj = [current_pos.z , target1.z , target2.z]
-
     pva_list = generate_traj_3d(x=x_traj , y=y_traj , z=z_traj , traj_time=[0,time_full_traj] , corr=None , freq = freq)
     
     # Send the generate traj to the vehicle
